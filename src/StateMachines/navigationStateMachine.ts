@@ -9,6 +9,8 @@ import {
   ITenderViewEvent
 } from "./types";
 
+import visualize from "xstate-plantuml";
+
 const getUserCookie = async () => {
   throw new Error("No user cookie");
 };
@@ -24,7 +26,7 @@ export enum Events {
   CANCEL = "CANCEL",
   REGISTERED = "REGISTERED",
   SETTINGS = "SETTINGS",
-  PROFILE = "PROPFILE",
+  PROFILE = "PROFILE",
   CHANGE_ORGANIZATION = "CHANGE_ORGANIZATION"
 }
 
@@ -46,6 +48,20 @@ export enum States {
   readTender = "readTenderPage",
   updateTender = "updateTenderPage",
   createTender = "createTenderPage"
+}
+
+export enum Guards {
+  emailValidated = "emailValidated"
+}
+
+export enum Actions {
+  assignExistingUser = "assignExistingUser",
+  clearOrganization = "clearOrganization",
+  assignExistingTender = "assignExistingTender",
+  clearTender = "clearTender",
+  assignNewTender = "assignNewTender",
+  assignOrganization = "assignOrganization",
+  clearUser = "clearUser"
 }
 
 export const navigationStateMachine = Machine<
@@ -110,12 +126,10 @@ export const navigationStateMachine = Machine<
         },
         states: {
           [States.checkEmailValidation]: {
-            on: {
-              "": [
-                { target: States.emailValidated, cond: "emailValidated" },
-                { target: States.emailNotValidated }
-              ]
-            }
+            always: [
+              { target: States.emailValidated, cond: Guards.emailValidated },
+              { target: States.emailNotValidated }
+            ]
           },
           [States.emailNotValidated]: {
             on: {
@@ -212,40 +226,40 @@ export const navigationStateMachine = Machine<
   },
   {
     guards: {
-      emailValidated: (context) => context.emailValidated || false
+      [Guards.emailValidated]: (context) => context.emailValidated || false
     },
     actions: {
-      assignExistingUser: assign({
+      [Actions.assignExistingUser]: assign({
         username: (context, event: ILoggedInEvent) => {
           return event.username ? event.username : "default user";
         },
         emailValidated: true,
         organizations: ["EDF", "Limejump"]
       }),
-      assignNewUser: assign({
+      [Actions.assignNewUser]: assign({
         username: "new user",
         emailValidated: false,
         organizations: ["Octopus", "Bulb"]
       }),
-      clearUser: assign({
+      [Actions.clearUser]: assign({
         username: undefined,
         emailValidated: undefined,
         organizations: []
       }),
-      assignOrganization: assign({
+      [Actions.assignOrganization]: assign({
         selectedOrganization: (context, event: IOrganizationSelectedEvent) =>
           event.organizationName
       }),
-      clearOrganization: assign({
+      [Actions.clearOrganization]: assign({
         selectedOrganization: undefined
       }),
-      assignExistingTender: assign({
+      [Actions.assignExistingTender]: assign({
         tenderId: (context, event: ITenderViewEvent) => event.id
       }),
-      assignNewTender: assign({
+      [Actions.assignNewTender]: assign({
         tenderId: "2323123"
       }),
-      clearTender: assign({
+      [Actions.clearTender]: assign({
         tenderId: undefined
       })
     }

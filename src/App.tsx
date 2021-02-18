@@ -5,6 +5,13 @@ import { navigationStateMachine } from "./StateMachines";
 import * as React from "react";
 import { NavigationView } from "./statelessComponents";
 
+import { inspect } from "@xstate/inspect";
+
+inspect({
+  url: "https://statecharts.io/inspect",
+  iframe: false
+});
+
 /**
  * Manages the navigation state machine and renders when it changes state
  */
@@ -14,7 +21,9 @@ export default class App extends Component<{}, {}, {}> {
     this.state = { path: "loading" };
   }
 
-  private service = interpret(navigationStateMachine).onTransition((state) => {
+  private service = interpret(navigationStateMachine, {
+    devTools: true
+  }).onTransition((state) => {
     this.setState(state);
   });
 

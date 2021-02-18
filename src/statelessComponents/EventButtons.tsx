@@ -43,6 +43,7 @@ export const EventButtons: React.FunctionComponent<{
     <div>
       {props.events.sort().map((event: string) => (
         <Button
+          key={event}
           onClick={() => {
             props.send(getEvent(event));
           }}

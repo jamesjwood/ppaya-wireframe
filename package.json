@@ -1,21 +1,19 @@
 {
-  "name": "react-typescript",
+  "name": "ppaya-wireframe",
   "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
-  "keywords": [
-    "typescript",
-    "react",
-    "starter"
-  ],
+  "description": "",
+  "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
+    "@xstate/inspect": "0.4.1",
     "bootstrap": "4.6.0",
     "react": "17.0.1",
     "react-bootstrap": "1.5.0",
     "react-dom": "17.0.1",
     "react-scripts": "4.0.0",
     "rxjs": "6.6.3",
-    "xstate": "4.16.2"
+    "xstate": "4.16.2",
+    "xstate-plantuml": "0.5.0"
   },
   "devDependencies": {
     "@types/react": "17.0.0",

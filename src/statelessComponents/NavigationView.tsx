@@ -5,6 +5,7 @@ import { EventButtons } from "./EventButtons";
 import { Header } from "./Header";
 import { Jumbotron, Container } from "react-bootstrap";
 import { States } from "../StateMachines";
+import { LoginPage, SelectAnOrganization } from "../pages";
 
 export interface INavigationViewProps {
   service: Interpreter<INavigationContext, any>;
@@ -26,52 +27,28 @@ const getPageName = (state: State<any>) => {
 const pages = {
   default: (props: IPageProps) => {
     return (
-      <div className="default">
+      <div>
         <Header {...props} />
-        <Jumbotron>
-          <EventButtons events={props.events} send={props.send} />
-          <br />
-          State: {props.path}
-          <br />
-          Context: {JSON.stringify(props.context)}
-        </Jumbotron>
+        <Container>
+          <Jumbotron>
+            <EventButtons events={props.events} send={props.send} />
+            <br />
+            State: {props.path}
+            <br />
+            Context: {JSON.stringify(props.context)}
+          </Jumbotron>
+        </Container>
       </div>
     );
   },
   [States.login]: (props: IPageProps) => {
-    return (
-      <div className="login">
-        <Header {...props} />
-        <Jumbotron>
-          Welcome to the PPAYA wireframe demo. This is generated from the
-          navigation state chart. Each state has a corresponding page. Each page
-          has buttons automatically generated for the possible events that can
-          be raised in that state.
-          <br />
-          [Login control goes here]
-          <br />
-          <EventButtons events={props.events} send={props.send} />
-          <br />
-          State: {props.path}
-          <br />
-          Context: {JSON.stringify(props.context)}
-        </Jumbotron>
-      </div>
-    );
+    return <LoginPage {...props} />;
+  },
+  [States.selectAnOrganization]: (props: IPageProps) => {
+    return <SelectAnOrganization {...props} />;
   },
   init: (props: IPageProps) => {
     return <div className="init">Loading</div>;
-  },
-  [States.readTender]: (props: IPageProps) => {
-    return (
-      <div className="default">
-        <Header {...props} />
-        <EventButtons events={props.events} send={props.send} />
-        [viewTender control goes here]
-        <br />
-        System state: {JSON.stringify(props.context)}
-      </div>
-    );
   }
 };
 
@@ -92,9 +69,9 @@ export const NavigationView: React.FunctionComponent<INavigationViewProps> = (
         events: service.state.nextEvents,
         context: service.state.context
       };
-      const pageRender = (pages as any)[pageName];
-      if (pageRender) {
-        return <Container className="p-3">{pageRender(props)}</Container>;
+      const customPage = (pages as any)[pageName];
+      if (customPage) {
+        return customPage(props);
       } else {
         return (pages as any)["default"](props);
       }
