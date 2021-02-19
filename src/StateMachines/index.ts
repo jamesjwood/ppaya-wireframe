@@ -1,8 +1,4 @@
-import {
-  navigationStateMachine,
-  States,
-  Events
-} from "./navigationStateMachine";
+import { makeAppStateMachine, States, Events } from "./appStateMachine";
 import * as TYPES from "./types";
 
-export { navigationStateMachine, States, Events, TYPES };
+export { makeAppStateMachine, States, Events, TYPES };

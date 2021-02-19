@@ -1,5 +1,5 @@
 import * as React from "react";
-import { INavigationContext, IPageProps } from "../StateMachines/types";
+import { IAppContext, IPageProps } from "../StateMachines/types";
 import { Interpreter, State } from "xstate";
 import { EventButtons } from "./EventButtons";
 import { Header } from "./Header";
@@ -7,8 +7,8 @@ import { Jumbotron, Container } from "react-bootstrap";
 import { States } from "../StateMachines";
 import { LoginPage, SelectAnOrganization } from "../pages";
 
-export interface INavigationViewProps {
-  service: Interpreter<INavigationContext, any>;
+export interface IAppViewProps {
+  service: Interpreter<IAppContext, any>;
 }
 
 const getPagePath = (state: State<any>) => {
@@ -41,25 +41,16 @@ const pages = {
       </div>
     );
   },
-  [States.login]: (props: IPageProps) => {
-    return <LoginPage {...props} />;
-  },
-  [States.selectAnOrganization]: (props: IPageProps) => {
-    return <SelectAnOrganization {...props} />;
-  },
-  init: (props: IPageProps) => {
-    return <div className="init">Loading</div>;
-  }
+  [States.credentialsNotFound]: LoginPage,
+  [States.selectAnOrganization]: SelectAnOrganization
 };
 
 /**
  * Generates a custom or default view for each state
  */
-export const NavigationView: React.FunctionComponent<INavigationViewProps> = (
-  props
-) => {
+export const AppView: React.FunctionComponent<IAppViewProps> = (props) => {
   const service = props.service;
-  if (service.state) {
+  if (service.initialized && service.state) {
     const pageName = getPageName(service.state);
     if (pageName) {
       const props = {

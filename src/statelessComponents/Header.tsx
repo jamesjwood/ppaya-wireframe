@@ -13,9 +13,6 @@ interface IConditonalNavLinkProperties {
 const ConditionalNavLink: React.FunctionComponent<IConditonalNavLinkProperties> = (
   props
 ) => {
-  console.log("Conditional");
-  console.log(props.eventName);
-  console.log(props.pageProps);
   if (
     props.pageProps.events &&
     props.pageProps.events.includes(props.eventName)
